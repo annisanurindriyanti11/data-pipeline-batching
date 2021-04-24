@@ -1,0 +1,113 @@
+select * from public.data_csv;
+
+select distinct description from public.data_csv;
+select distinct stockcode from public.data_csv;
+
+--no 1 WHITE HANGING HEART T-LIGHT HOLDER
+select description, count(description) as total_description from public.data_csv group by description order by total_description desc ;
+select description, count(description) as total_description from public.data_csv group by description order by total_description asc ;
+
+--no 2 85123A
+select stockcode, count(stockcode) as total_stockcode from public.data_csv group by stockcode order by total_stockcode desc; 
+select stockcode, count(stockcode) as total_stockcode from public.data_csv group by stockcode order by total_stockcode asc ;
+
+--no 3 pembelian terbanyak pada tanggal 2011-07-19 13:01:00
+select
+	stockcode,
+	description,
+	cast (invoicedate as timestamp),
+	--country, 
+	count(stockcode) as total_stockcode 
+from
+	public.data_csv
+where
+	stockcode = '85123A'
+group by
+	stockcode,
+	description,
+	invoicedate
+	--country 
+order by total_stockcode desc;
+
+
+-- soal nomer 4 penjualan paling banyak = United Kingdom
+select
+	stockcode,
+	count(country) total_country,
+	description,
+--	cast(invoicedate as timestamp) "date",
+	country
+from
+	public.data_csv
+--where
+--	cast(invoicedate as timestamp)='2011-07-19 13:01'
+group by
+	country,
+	description,
+	stockcode
+order by
+	total_country desc;
+
+--no 5 penjualan paling sedikit = Germany
+select
+	stockcode, 
+	count (country) total ,
+	description,
+--	cast (invoicedate as timestamp) "date",
+	country
+from
+	public.data_csv
+where
+	--cast(invoicedate as timestamp)='2011-07-19 13:01' 
+	description = 'WHITE HANGING HEART T-LIGHT HOLDER'
+group by
+	country,
+	description,
+--	invoicedate,
+	stockcode 
+order by
+	total asc ;
+
+
+select
+	stockcode,
+	description,
+	max(quantity) quantity ,
+	cast (invoicedate as timestamp) "date",
+	country
+from
+	public.data_csv
+where
+	description = 'WHITE HANGING HEART T-LIGHT HOLDER' and stockcode ='85123A' and cast(invoicedate as timestamp)='2011-07-19 13:01'
+group by stockcode, description, invoicedate, country
+order by quantity desc; 
+
+
+select
+	stockcode,
+	description,
+	quantity,
+	cast (invoicedate as timestamp) "date",
+	country,
+	count(stockcode) total 
+from
+	public.data_csv
+where
+	description = 'WHITE HANGING HEART T-LIGHT HOLDER' and stockcode ='85123A' and cast(invoicedate as timestamp)='2011-07-19 13:01'
+group by stockcode, description, quantity, invoicedate, country
+order by total desc;
+
+-- final query
+select
+	stockcode,
+	description,
+	(quantity),
+	cast (invoicedate as timestamp) "date",
+	country
+from
+	public.data_csv
+where
+	--stockcode = '85123A'
+	description = 'WHITE HANGING HEART T-LIGHT HOLDER' and cast(invoicedate as timestamp)='2011-07-19 13:01'
+group by stockcode, description, quantity, invoicedate, country
+order by quantity desc;
